@@ -12,6 +12,13 @@ class AuthorizationsController < ActionController::API
       client = Google::Apis::Oauth2V2::Oauth2Service.new
       client.authorization = auth_client
       user_info = client.get_userinfo
-      
+
+      auth_token = AuthToken.where(email: user_info.email).first_or_create
+      auth_token.update(token: token)
+
+      render json: {
+        email: user_info.email,
+        token: token
+      }
   end
 end
