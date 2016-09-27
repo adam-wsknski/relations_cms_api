@@ -15,10 +15,11 @@ class NotesController < ApplicationController
 
   # POST /notes
   def create
-    @note = Note.new(note_params)
-
+    note_klass = params[:data][:type].underscore.classify.safe_constantize
+    @note = note_klass.new(note_params)
+    
     if @note.save
-      render json: @note, status: :created, location: @note
+      render json: @note, status: :created, location: note_url(@note)
     else
       render json: @note.errors, status: :unprocessable_entity
     end
@@ -46,6 +47,6 @@ class NotesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def note_params
-      params.require(:note).permit(:type, :title, :description, :contact_id, :topic_id)
+      params.require(:data).require(:attributes).permit(:title, :description)
     end
 end
