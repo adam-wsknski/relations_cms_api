@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160927091918) do
+ActiveRecord::Schema.define(version: 20160927101451) do
 
   create_table "companies", force: :cascade do |t|
     t.string   "name"
@@ -45,6 +45,15 @@ ActiveRecord::Schema.define(version: 20160927091918) do
     t.integer "project_id"
     t.index ["contact_id"], name: "index_contacts_projects_on_contact_id"
     t.index ["project_id"], name: "index_contacts_projects_on_project_id"
+  end
+
+  create_table "offers", force: :cascade do |t|
+    t.string   "name"
+    t.float    "price"
+    t.integer  "status",      default: 0
+    t.datetime "valid_until"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "projects", force: :cascade do |t|
