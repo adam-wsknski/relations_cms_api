@@ -16,6 +16,8 @@ class ProjectsController < ApplicationController
   # POST /projects
   def create
     @project = Project.new(project_params)
+    @project.contacts << (relationship_params[:contacts] || [])
+    @project.tasks << (relationship_params[:tasks] || [])
 
     if @project.save
       render json: @project, status: :created, location: @project
@@ -27,6 +29,9 @@ class ProjectsController < ApplicationController
   # PATCH/PUT /projects/1
   def update
     if @project.update(project_params)
+      @project.contacts = relationship_params[:contacts] if relationship_params[:contacts]
+      @project.tasks = relationship_params[:tasks] if relationship_params[:tasks]
+
       render json: @project
     else
       render json: @project.errors, status: :unprocessable_entity
@@ -46,6 +51,6 @@ class ProjectsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def project_params
-      params.require(:project).permit(:name, :status)
+      params.require(:data).require(:attributes).permit(:name, :status)
     end
 end
